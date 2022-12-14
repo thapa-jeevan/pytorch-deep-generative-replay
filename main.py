@@ -1,14 +1,15 @@
 #!/usr/bin/env python3
 import argparse
 import os.path
+
 import numpy as np
 import torch
-import utils
-from data import get_dataset, DATASET_CONFIGS
-from train import train
-from dgr import Scholar
-from models import WGAN, CNN
 
+import utils
+from data import DATASET_CONFIGS, get_dataset
+from dgr import Scholar
+from models import CNN, WGAN
+from train import train
 
 parser = argparse.ArgumentParser(
     'PyTorch implementation of Deep Generative Replay'
@@ -16,8 +17,8 @@ parser = argparse.ArgumentParser(
 
 parser.add_argument(
     '--experiment', type=str,
-    choices=['permutated-mnist', 'svhn-mnist', 'mnist-svhn'],
-    default='permutated-mnist'
+    choices=['permuted-mnist', 'svhn-mnist', 'mnist-svhn'],
+    default='permuted-mnist'
 )
 parser.add_argument('--mnist-permutation-number', type=int, default=5)
 parser.add_argument('--mnist-permutation-seed', type=int, default=0)
@@ -59,7 +60,6 @@ main_command = parser.add_mutually_exclusive_group(required=True)
 main_command.add_argument('--train', action='store_true')
 main_command.add_argument('--test', action='store_false', dest='train')
 
-
 if __name__ == '__main__':
     args = parser.parse_args()
 
@@ -71,11 +71,11 @@ if __name__ == '__main__':
         args.solver_iterations
     )
 
-    if experiment == 'permutated-mnist':
+    if experiment == 'permuted-mnist':
         # generate permutations for the mnist classification tasks.
         np.random.seed(args.mnist_permutation_seed)
         permutations = [
-            np.random.permutation(DATASET_CONFIGS['mnist']['size']**2) for
+            np.random.permutation(DATASET_CONFIGS['mnist']['size'] ** 2) for
             _ in range(args.mnist_permutation_number)
         ]
 
@@ -152,8 +152,8 @@ if __name__ == '__main__':
 
     # determine whether we need to train the generator or not.
     train_generator = (
-        args.replay_mode == 'generative-replay' or
-        args.sample_log
+            args.replay_mode == 'generative-replay' or
+            args.sample_log
     )
 
     # run the experiment.

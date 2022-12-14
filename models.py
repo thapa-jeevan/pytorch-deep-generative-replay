@@ -1,9 +1,11 @@
 from functools import reduce
+
 import torch
-from torch import nn, autograd
+from torch import autograd, nn
 from torch.autograd import Variable
-import gan
+
 import dgr
+import gan
 import utils
 from const import EPSILON
 
@@ -51,7 +53,7 @@ class WGAN(dgr.Generator):
             # run the critic on the real data.
             c_loss_real, g_real = self._c_loss(x, z, return_g=True)
             c_loss_real_gp = (
-                c_loss_real + self._gradient_penalty(x, g_real, self.lamda)
+                    c_loss_real + self._gradient_penalty(x, g_real, self.lamda)
             )
 
             # run the critic on the replayed data.
@@ -61,12 +63,12 @@ class WGAN(dgr.Generator):
                     x_, g_replay, self.lamda
                 ))
                 c_loss = (
-                    importance_of_new_task * c_loss_real +
-                    (1-importance_of_new_task) * c_loss_replay
+                        importance_of_new_task * c_loss_real +
+                        (1 - importance_of_new_task) * c_loss_replay
                 )
                 c_loss_gp = (
-                    importance_of_new_task * c_loss_real_gp +
-                    (1-importance_of_new_task) * c_loss_replay_gp
+                        importance_of_new_task * c_loss_real_gp +
+                        (1 - importance_of_new_task) * c_loss_replay_gp
                 )
             else:
                 c_loss = c_loss_real
@@ -82,7 +84,7 @@ class WGAN(dgr.Generator):
         g_loss.backward()
         self.generator_optimizer.step()
 
-        return {'c_loss': c_loss.data[0], 'g_loss': g_loss.data[0]}
+        return {'c_loss': c_loss.item(), 'g_loss': g_loss.item()}
 
     def sample(self, size):
         return self.generator(self._noise(size))
@@ -107,28 +109,28 @@ class WGAN(dgr.Generator):
         g = self.generator(z)
         c_x = self.critic(x).mean()
         c_g = self.critic(g).mean()
-        l = -(c_x-c_g)
+        l = -(c_x - c_g)
         return (l, g) if return_g else l
 
     def _g_loss(self, z, return_g=False):
         g = self.generator(z)
-        l = -self.critic(g).mean()
+        l = - self.critic(g).mean()
         return (l, g) if return_g else l
 
     def _gradient_penalty(self, x, g, lamda):
         assert x.size() == g.size()
         a = torch.rand(x.size(0), 1)
         a = a.cuda() if self._is_on_cuda() else a
-        a = a\
-            .expand(x.size(0), x.nelement()//x.size(0))\
-            .contiguous()\
+        a = a \
+            .expand(x.size(0), x.nelement() // x.size(0)) \
+            .contiguous() \
             .view(
-                x.size(0),
-                self.image_channel_size,
-                self.image_size,
-                self.image_size
-            )
-        interpolated = Variable(a*x.data + (1-a)*g.data, requires_grad=True)
+            x.size(0),
+            self.image_channel_size,
+            self.image_size,
+            self.image_size
+        )
+        interpolated = Variable(a * x.data + (1 - a) * g.data, requires_grad=True)
         c = self.critic(interpolated)
         gradients = autograd.grad(
             c, interpolated, grad_outputs=(
@@ -138,7 +140,7 @@ class WGAN(dgr.Generator):
             create_graph=True,
             retain_graph=True,
         )[0]
-        return lamda * ((1-(gradients+EPSILON).norm(2, dim=1))**2).mean()
+        return lamda * ((1 - (gradients + EPSILON).norm(2, dim=1)) ** 2).mean()
 
     def _is_on_cuda(self):
         return next(self.parameters()).is_cuda
@@ -160,11 +162,11 @@ class CNN(dgr.Solver):
 
         # layers
         self.layers = nn.ModuleList([nn.Conv2d(
-            self.image_channel_size, self.channel_size//(2**(depth-2)),
+            self.image_channel_size, self.channel_size // (2 ** (depth - 2)),
             3, 1, 1
         )])
 
-        for i in range(self.depth-2):
+        for i in range(self.depth - 2):
             previous_conv = [
                 l for l in self.layers if
                 isinstance(l, nn.Conv2d)
@@ -179,7 +181,7 @@ class CNN(dgr.Solver):
 
         self.layers.append(utils.LambdaModule(lambda x: x.view(x.size(0), -1)))
         self.layers.append(nn.Linear(
-            (image_size//(2**reducing_layers))**2 * channel_size,
+            (image_size // (2 ** reducing_layers)) ** 2 * channel_size,
             self.classes
         ))
 

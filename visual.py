@@ -1,5 +1,5 @@
 import numpy as np
-from torch.cuda import FloatTensor as CUDATensor
+from torch import Tensor as CUDATensor
 from visdom import Visdom
 
 _WINDOW_CASH = {}
@@ -55,7 +55,7 @@ def visualize_kernel(kernel, name, label=None, env='main', w=250, h=250,
     title = name + ('-{}'.format(label) if label is not None else '')
     kernel = kernel.cpu() if isinstance(kernel, CUDATensor) else kernel
     kernel_norm = kernel if len(kernel.size()) == 2 else (
-        (kernel**2).mean(-1).mean(-1) if compress_tensor else
+        (kernel ** 2).mean(-1).mean(-1) if compress_tensor else
         kernel.view(
             kernel.size()[0] * kernel.size()[2],
             kernel.size()[1] * kernel.size()[3],
@@ -64,8 +64,8 @@ def visualize_kernel(kernel, name, label=None, env='main', w=250, h=250,
     kernel_norm = kernel_norm.abs()
 
     visualized = (
-        (kernel_norm - kernel_norm.min()) /
-        (kernel_norm.max() - kernel_norm.min())
+            (kernel_norm - kernel_norm.min()) /
+            (kernel_norm.max() - kernel_norm.min())
     ).numpy()
 
     _WINDOW_CASH[title] = _vis(env).image(
@@ -119,6 +119,8 @@ def visualize_scalars(scalars, names, title, iteration, env='main'):
     Y = np.column_stack(scalars) if multi else scalars[0]
 
     if title in _WINDOW_CASH:
-        _vis(env).updateTrace(X=X, Y=Y, win=_WINDOW_CASH[title], opts=options)
+        # _vis(env).updateTrace(X=X, Y=Y, win=_WINDOW_CASH[title], opts=options)
+        _vis(env).line(X=X, Y=Y, win=_WINDOW_CASH[title], opts=options, update='append')
+
     else:
         _WINDOW_CASH[title] = _vis(env).line(X=X, Y=Y, opts=options)

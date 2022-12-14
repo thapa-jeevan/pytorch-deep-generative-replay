@@ -7,11 +7,11 @@ PyTorch implementation of [Continual Learning with Deep Generative Replay, NIPS 
 
 ## Results
 
-### Continual Learning on Permutated MNISTs
+### Continual Learning on permuted MNISTs
 
 - Test precisions **without replay** (*left*), **with exact replay** (*middle*), and **with Deep Generative Replay** (*right*).
 
-<img width="250" style="margin: 5px;" src="./arts/permutated-mnist-none.png" /> <img width="250" style="margin: 5px;" src="./arts/permutated-mnist-exact-replay.png" /> <img width="250" style="margin: 5px;" src="./arts/permutated-mnist-generative-replay.png" />
+<img width="250" style="margin: 5px;" src="./arts/permuted-mnist-none.png" /> <img width="250" style="margin: 5px;" src="./arts/permuted-mnist-exact-replay.png" /> <img width="250" style="margin: 5px;" src="./arts/permuted-mnist-generative-replay.png" />
 
 ### Continual Learning on MNIST-SVHN
 
@@ -45,7 +45,7 @@ PyTorch implementation of [Continual Learning with Deep Generative Replay, NIPS 
 ## Installation
 ```shell
 $ git clone https://github.com/kuc2477/pytorch-deep-generative-replay
-$ pip install -r pytorch-deep-generative-replay/requirements.txt
+$ pip install -r dgr/requirements.txt
 ```
 
 ## Commands
@@ -54,7 +54,7 @@ $ pip install -r pytorch-deep-generative-replay/requirements.txt
 ```shell
 $ ./main.py --help
 $ usage: PyTorch implementation of Deep Generative Replay [-h]
-                                                          [--experiment {permutated-mnist,svhn-mnist,mnist-svhn}]
+                                                          [--experiment {permuted-mnist,svhn-mnist,mnist-svhn}]
                                                           [--mnist-permutation-number MNIST_PERMUTATION_NUMBER]
                                                           [--mnist-permutation-seed MNIST_PERMUTATION_SEED]
                                                           --replay-mode
@@ -95,13 +95,13 @@ $ ./run_full_experiments
 ```shell
 # Run a visdom server and conduct a desired experiment
 $ python -m visdom.server &
-$ ./main.py --train --experiment=[permutated-mnist|svhn-mnist|mnist-svhn] --replay-mode=[exact-replay|generative-replay|none]
+$ ./main.py --train --experiment=[permuted-mnist|svhn-mnist|mnist-svhn] --replay-mode=[exact-replay|generative-replay|none]
 ```
 
 ### To Generate Images from the learned Scholar
 ```shell
 $ # Run the command below and visit the "samples" directory
-$ ./main.py --test --experiment=[permutated-mnist|svhn-mnist|mnist-svhn] --replay-mode=[exact-replay|generative-replay|none]
+$ ./main.py --test --experiment=[permuted-mnist|svhn-mnist|mnist-svhn] --replay-mode=[exact-replay|generative-replay|none]
 ```
 
 ## Note

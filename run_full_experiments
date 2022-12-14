@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # ================
-# Permutated MNIST
+# Permuted MNIST
 # ================
 
 PERM_MNIST_GENERATOR_ITERATIONS=3000
@@ -9,23 +9,23 @@ PERM_MNIST_SOLVER_ITERATIONS=1000
 PERM_MNIST_LR=0.0001
 PERM_MNIST_IMPORTANCE_OF_NEW_TASK=0.3
 
-./main.py --train \
-  --experiment=permutated-mnist \
-  --replay-mode=exact-replay \
-  --solver-iterations=$PERM_MNIST_SOLVER_ITERATIONS \
-  --lr=$PERM_MNIST_LR \
-  --importance-of-new-task=$PERM_MNIST_IMPORTANCE_OF_NEW_TASK
-
-./main.py --train \
-  --experiment=permutated-mnist \
+python main.py --train \
+  --experiment=permuted-mnist \
   --replay-mode=generative-replay \
   --generator-iterations=$PERM_MNIST_GENERATOR_ITERATIONS \
   --solver-iterations=$PERM_MNIST_SOLVER_ITERATIONS \
   --lr=$PERM_MNIST_LR \
   --importance-of-new-task=$PERM_MNIST_IMPORTANCE_OF_NEW_TASK
 
-./main.py --train \
-  --experiment=permutated-mnist \
+python main.py --train \
+  --experiment=permuted-mnist \
+  --replay-mode=exact-replay \
+  --solver-iterations=$PERM_MNIST_SOLVER_ITERATIONS \
+  --lr=$PERM_MNIST_LR \
+  --importance-of-new-task=$PERM_MNIST_IMPORTANCE_OF_NEW_TASK
+
+python main.py --train \
+  --experiment=permuted-mnist \
   --replay-mode=none \
   --solver-iterations=$PERM_MNIST_SOLVER_ITERATIONS \
   --lr=$PERM_MNIST_LR
@@ -39,14 +39,14 @@ MNIST_SVHN_SOLVER_ITERATIONS=4000
 MNIST_SVHN_LR=0.00003
 MNIST_SVHN_IMPORTANCE_OF_NEW_TASK=0.4
 
-./main.py --train \
+python main.py --train \
   --experiment=mnist-svhn \
   --replay-mode=exact-replay \
   --solver-iterations=$MNIST_SVHN_SOLVER_ITERATIONS \
   --importance-of-new-task=$MNIST_SVHN_IMPORTANCE_OF_NEW_TASK \
   --lr=$MNIST_SVHN_LR
 
-./main.py --train \
+python main.py --train \
   --experiment=mnist-svhn \
   --replay-mode=generative-replay \
   --generator-iterations=$MNIST_SVHN_GENERATOR_ITERATIONS \
@@ -55,7 +55,7 @@ MNIST_SVHN_IMPORTANCE_OF_NEW_TASK=0.4
   --lr=$MNIST_SVHN_LR \
   --sample-log
 
-./main.py --train \
+python main.py --train \
   --experiment=mnist-svhn \
   --replay-mode=none \
   --generator-iterations=$MNIST_SVHN_GENERATOR_ITERATIONS \
@@ -72,14 +72,14 @@ SVHN_MNIST_SOLVER_ITERATIONS=4000
 SVHN_MNIST_LR=0.00003
 SVHN_MNIST_IMPORTANCE_OF_NEW_TASK=0.4
 
-./main.py --train \
+python main.py --train \
   --experiment=svhn-mnist \
   --replay-mode=exact-replay \
   --solver-iterations=$SVHN_MNIST_SOLVER_ITERATIONS \
   --importance-of-new-task=$SVHN_MNIST_IMPORTANCE_OF_NEW_TASK \
   --lr=$SVHN_MNIST_LR
 
-./main.py --train \
+python main.py --train \
   --experiment=svhn-mnist \
   --replay-mode=generative-replay \
   --generator-iterations=$SVHN_MNIST_GENERATOR_ITERATIONS \
@@ -88,7 +88,7 @@ SVHN_MNIST_IMPORTANCE_OF_NEW_TASK=0.4
   --lr=$SVHN_MNIST_LR \
   --sample-log
 
-./main.py --train \
+python main.py --train \
   --experiment=svhn-mnist \
   --replay-mode=none \
   --generator-iterations=$SVHN_MNIST_GENERATOR_ITERATIONS \

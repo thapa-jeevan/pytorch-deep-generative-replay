@@ -1,8 +1,9 @@
 import copy
 import math
-from torchvision import datasets, transforms
-from torchvision.transforms import ImageOps
+
+from PIL import ImageOps
 from torch.utils.data import ConcatDataset
+from torchvision import datasets, transforms
 
 
 def _permutate_image_pixels(image, permutation):
@@ -61,7 +62,6 @@ _SVHN_TARGET_TRANSFORMS = [
     transforms.Lambda(lambda y: y % 10)
 ]
 
-
 TRAIN_DATASETS = {
     'mnist': lambda: datasets.MNIST(
         './datasets/mnist', train=True, download=True,
@@ -86,7 +86,6 @@ TRAIN_DATASETS = {
     ),
 }
 
-
 TEST_DATASETS = {
     'mnist': lambda: datasets.MNIST(
         './datasets/mnist', train=False,
@@ -110,7 +109,6 @@ TEST_DATASETS = {
         target_transform=transforms.Compose(_SVHN_TARGET_TRANSFORMS),
     ),
 }
-
 
 DATASET_CONFIGS = {
     'mnist': {'size': 32, 'channels': 1, 'classes': 10},

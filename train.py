@@ -1,7 +1,9 @@
-import os.path
 import copy
-from torch import optim
+import os.path
+
 from torch import nn
+from torch import optim
+
 import utils
 import visual
 
@@ -131,9 +133,8 @@ def _generator_training_callback(
         sample_size,
         replay_mode,
         env):
-
     def cb(generator, progress, batch_index, result):
-        iteration = (current_task-1)*total_iterations + batch_index
+        iteration = (current_task - 1) * total_iterations + batch_index
         progress.set_description((
             '<Training Generator> '
             'task: {task}/{tasks} | '
@@ -146,7 +147,7 @@ def _generator_training_callback(
             tasks=total_tasks,
             trained=batch_size * batch_index,
             total=batch_size * total_iterations,
-            percentage=(100.*batch_index/total_iterations),
+            percentage=(100. * batch_index / total_iterations),
             g_loss=result['g_loss'],
             w_dist=-result['c_loss'],
         ))
@@ -192,9 +193,8 @@ def _solver_training_callback(
         replay_mode,
         collate_fn,
         env):
-
     def cb(solver, progress, batch_index, result):
-        iteration = (current_task-1)*total_iterations + batch_index
+        iteration = (current_task - 1) * total_iterations + batch_index
         progress.set_description((
             '<Training Solver>    '
             'task: {task}/{tasks} | '
@@ -206,7 +206,7 @@ def _solver_training_callback(
             tasks=total_tasks,
             trained=batch_size * batch_index,
             total=batch_size * total_iterations,
-            percentage=(100.*batch_index/total_iterations),
+            percentage=(100. * batch_index / total_iterations),
             loss=result['loss'],
             prec=result['precision'],
         ))
@@ -219,14 +219,15 @@ def _solver_training_callback(
 
         # evaluate the solver on multiple tasks.
         if iteration % eval_log_interval == 0:
-            names = ['task {}'.format(i+1) for i in range(len(test_datasets))]
+            names = ['task {}'.format(i + 1) for i in range(len(test_datasets))]
             precs = [
                 utils.validate(
                     solver, test_datasets[i], test_size=test_size,
                     cuda=cuda, verbose=False, collate_fn=collate_fn,
-                ) if i+1 <= current_task else 0 for i in
+                ) if i + 1 <= current_task else 0 for i in
                 range(len(test_datasets))
             ]
+            print(precs)
             title = 'precision ({replay_mode})'.format(replay_mode=replay_mode)
             visual.visualize_scalars(
                 precs, names, title,
