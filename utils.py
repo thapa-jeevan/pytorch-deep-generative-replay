@@ -100,7 +100,7 @@ def xavier_initialize(model):
             nn.init.constant(p, 0)
 
 
-def gaussian_intiailize(model, std=.01):
+def gaussian_initialize(model, std=.01):
     modules = [m for n, m in model.named_modules() if 'conv' in n or 'fc' in n]
     parameters = [p for m in modules for p in m.parameters()]
 

@@ -55,7 +55,7 @@ def train(scholar, train_datasets, test_datasets, replay_mode,
     )
     scholar.train()
 
-    # define the previous scholar who will generate samples of previous tasks.
+    # define the previous scholar which will generate samples of previous tasks.
     previous_scholar = None
     previous_datasets = None
 

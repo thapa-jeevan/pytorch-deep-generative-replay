@@ -82,7 +82,7 @@ class Solver(BatchTrainable):
             loss = (
                     importance_of_new_task * real_loss +
                     (1 - importance_of_new_task) * replay_loss
-            )
+             )
             precision = (real_prec + replay_prec) / 2
         else:
             loss = real_loss

@@ -6,7 +6,7 @@ from torch.autograd import Variable
 
 import dgr
 import gan
-import utils
+# import utils
 from const import EPSILON
 
 
@@ -124,12 +124,8 @@ class WGAN(dgr.Generator):
         a = a \
             .expand(x.size(0), x.nelement() // x.size(0)) \
             .contiguous() \
-            .view(
-            x.size(0),
-            self.image_channel_size,
-            self.image_size,
-            self.image_size
-        )
+            .view(x.size(0), self.image_channel_size, self.image_size, self.image_size)
+
         interpolated = Variable(a * x.data + (1 - a) * g.data, requires_grad=True)
         c = self.critic(interpolated)
         gradients = autograd.grad(
@@ -174,12 +170,15 @@ class CNN(dgr.Solver):
             self.layers.append(nn.Conv2d(
                 previous_conv.out_channels,
                 previous_conv.out_channels * 2,
-                3, 1 if i >= reducing_layers else 2, 1
+                kernel_size=3,
+                stride=1 if i >= reducing_layers else 2,
+                padding=1
             ))
             self.layers.append(nn.BatchNorm2d(previous_conv.out_channels * 2))
             self.layers.append(nn.ReLU())
 
-        self.layers.append(utils.LambdaModule(lambda x: x.view(x.size(0), -1)))
+        # self.layers.append(utils.LambdaModule(lambda x: x.view(x.size(0), -1)))
+        self.layers.append(nn.Flatten())
         self.layers.append(nn.Linear(
             (image_size // (2 ** reducing_layers)) ** 2 * channel_size,
             self.classes
